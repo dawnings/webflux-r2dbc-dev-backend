@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 import java.util.List;
 
+import static cn.dawnings.bookkeeping.utils.flux.WebFluxUtils.pageByFunc;
+
 @RestController
 @RequestMapping("/demo")
 @RequiredArgsConstructor
@@ -30,8 +32,11 @@ public class DemoWeb implements BaseWeb {
     @GetMapping("/page")
     public Mono<Result<PageDto<DemoDo>>> page(@Valid @RequestBody DemoPageBo bo) {
         return Result.ok(pageByFunc(demoService, bo, DemoService::count, DemoService::page));
+    }
 
-
+    @GetMapping("/page2")
+    public Mono<Result<PageDto<DemoDo>>> page2(@Valid @RequestBody DemoPageBo bo) {
+        return Result.ok(demoService.page2(bo));
     }
 //    @GetMapping("/add")
 //    public Mono<DemoDo> add() {

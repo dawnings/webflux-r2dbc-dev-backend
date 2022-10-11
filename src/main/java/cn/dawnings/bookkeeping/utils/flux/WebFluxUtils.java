@@ -1,7 +1,10 @@
 package cn.dawnings.bookkeeping.utils.flux;
 
+import cn.dawnings.bookkeeping.domains.base.PageBo;
 import cn.dawnings.bookkeeping.domains.base.PageDto;
 import cn.dawnings.bookkeeping.domains.base.Result;
+import cn.dawnings.bookkeeping.service.base.BaseService;
+import lombok.val;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -9,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class WebFluxUtils {
     public static <T> Mono<Result<PageDto<T>>> monoResultPageCreate(Mono<List<T>> monoData, int code, String msg) {
@@ -20,6 +24,31 @@ public class WebFluxUtils {
             result.setData(pageDto);
             result.setMessage(msg);
             return result;
+        });
+    }
+
+    public static <DTO, B extends PageBo, Ser extends BaseService> Mono<PageDto<DTO>> pageByFunc(Ser service, B params
+            , BiFunction<Ser, B, Mono<Integer>> countFunc, BiFunction<Ser, B, Flux<DTO>> listFunc) {
+        val countRes = countFunc.apply(service, params);
+        val listRes = WebFluxUtils.fluxPageCreate(listFunc.apply(service, params));
+        return listRes.zipWith(countRes, (p, c) -> {
+            p.setTotal(c);
+            p.setRecords(p.getData().size());
+            p.setPage(params.getPage());
+            p.setLength(params.getLength());
+            return p;
+        });
+    }
+
+    public static <DTO, B extends PageBo> Mono<PageDto<DTO>> page(Mono<Long> countRes, Flux<DTO> listFlux, B params
+    ) {
+        val listRes = WebFluxUtils.fluxPageCreate(listFlux);
+        return listRes.zipWith(countRes, (p, c) -> {
+            p.setTotal(c.intValue());
+            p.setRecords(p.getData().size());
+            p.setPage(params.getPage());
+            p.setLength(params.getLength());
+            return p;
         });
     }
 
