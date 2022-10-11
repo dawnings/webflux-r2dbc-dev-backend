@@ -3,7 +3,7 @@ spring:
     name: bookkeeping-backend
   r2dbc:
     name: bookkeeping
-    url: r2dbcs:mysql://dawnings.cn:55001/bookkeeping?serverTimezone=GMT%2B8
+    url: r2dbcs:mysql://121.4.124.247:55001/bookkeeping?serverTimezone=GMT%2B8
     username: bookkeeping
     password: wE5GR4KmkrcKnLMF
     pool:
