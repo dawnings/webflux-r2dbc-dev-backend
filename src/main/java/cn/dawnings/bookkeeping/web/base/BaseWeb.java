@@ -17,6 +17,7 @@ public interface BaseWeb {
         val listRes = WebFluxUtils.fluxPageCreate(listFunc.apply(service, params));
         return listRes.zipWith(countRes, (p, c) -> {
             p.setTotal(c);
+            p.setRecords(p.getData().size());
             p.setPage(params.getPage());
             p.setLength(params.getLength());
             return p;
