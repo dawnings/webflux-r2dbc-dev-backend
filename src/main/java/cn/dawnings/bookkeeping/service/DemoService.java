@@ -12,7 +12,10 @@ public interface DemoService extends BaseService {
 
     Flux<DemoDo> page(DemoPageBo bo);
 
+    Mono<Integer> count(DemoPageBo bo);
+
     Mono<PageDto<DemoDo>> page2(DemoPageBo bo);
 
-    Mono<Integer> count(DemoPageBo bo);
+
+    Mono<PageDto<DemoDo>> page3(DemoPageBo bo);
 }

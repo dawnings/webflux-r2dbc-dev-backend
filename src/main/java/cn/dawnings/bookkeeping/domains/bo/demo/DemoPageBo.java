@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class DemoPageBo extends PageBo {
-    private String name;
+    private String nameLikeAll;
 }

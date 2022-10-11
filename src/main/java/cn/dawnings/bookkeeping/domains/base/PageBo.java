@@ -17,12 +17,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class PageBo extends BaseBo {
     /**
-     * 页码 1 开始.
+     * 页码 0 开始.
      */
     @NotNull(message = "页码必须传")
     @Min(0)
     private Integer page;
 
+
+    public Long getLengthLong() {
+        return Long.valueOf(length);
+    }
 
     /**
      * 页容 .

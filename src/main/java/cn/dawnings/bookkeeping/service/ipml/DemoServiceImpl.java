@@ -5,6 +5,8 @@ import cn.dawnings.bookkeeping.domains.bo.demo.DemoPageBo;
 import cn.dawnings.bookkeeping.domains.entity.DemoDo;
 import cn.dawnings.bookkeeping.r_repo.DemoRepo;
 import cn.dawnings.bookkeeping.service.DemoService;
+import cn.dawnings.bookkeeping.service.ipml.base.BaseServiceImpl;
+import cn.dawnings.bookkeeping.utils.flux.LambdaCQ;
 import cn.dawnings.bookkeeping.utils.flux.WebFluxUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -40,13 +42,24 @@ public class DemoServiceImpl extends BaseServiceImpl<DemoDo, DemoRepo> implement
 
     @Override
     public Mono<PageDto<DemoDo>> page2(DemoPageBo bo) {
-        val name = Criteria.where("name").like("%11");
+        val name = Criteria.where("name").like("%" + bo.getNameLikeAll() + "%");
         val count = r2dbcEntityTemplate.select(getDoClass()).
                 from("t_demo")
-                .matching(Query.query(name).limit(bo.getLength()).offset((long) bo.getLength() * (bo.getPage()))).count();
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).count();
         val all = r2dbcEntityTemplate.select(getDoClass()).
                 from("t_demo")
-                .matching(Query.query(name).limit(bo.getLength()).offset((long) bo.getLength() * (bo.getPage()))).all();
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all();
+
+        return WebFluxUtils.page(count, all, bo);
+    }
+
+    @Override
+    public Mono<PageDto<DemoDo>> page3(DemoPageBo bo) {
+        val name = LambdaCQ.where(DemoDo::getName).likeAll(bo.getNameLikeAll());
+        val count = getSelect()
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).count();
+        val all = getSelect()
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all();
 
         return WebFluxUtils.page(count, all, bo);
     }
