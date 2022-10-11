@@ -38,8 +38,8 @@ dependencies {
     implementation 'io.r2dbc:r2dbc-pool'
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'cn.hutool:hutool-all:5.8.8'
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.2.Final'
-
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'io.netty:netty-all'
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.5.2.Final'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

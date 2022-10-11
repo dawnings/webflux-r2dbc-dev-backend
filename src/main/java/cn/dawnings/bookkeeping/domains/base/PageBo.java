@@ -2,6 +2,7 @@ package cn.dawnings.bookkeeping.domains.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
@@ -11,9 +12,10 @@ import javax.validation.constraints.NotNull;
  * 分页请求父类.
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageBo {
+public class PageBo extends BaseBo {
     /**
      * 页码 1 开始.
      */

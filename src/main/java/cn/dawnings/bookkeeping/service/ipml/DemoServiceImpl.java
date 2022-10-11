@@ -11,6 +11,7 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,12 @@ public class DemoServiceImpl implements DemoService {
     @Override
     public Flux<DemoDo> page(DemoPageBo bo) {
         val pageable = Pageable.ofSize(bo.getLength()).withPage(bo.getPage());
+        System.out.println(pageable);
         return demoRepo.findAllBy(pageable);
+    }
+
+    @Override
+    public Mono<Integer> count(DemoPageBo bo) {
+        return demoRepo.countBy();
     }
 }

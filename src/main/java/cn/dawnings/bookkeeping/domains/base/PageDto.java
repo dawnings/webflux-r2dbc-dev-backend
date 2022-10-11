@@ -56,7 +56,7 @@ public class PageDto<T> implements Serializable {
      * @param length  the display length
      * @param total   the total records
      * @param records the total display records
-     * @param data  the aa data
+     * @param data    the aa data
      */
     public PageDto(Integer page, Integer length, Integer total, Integer records, List<T> data) {
         this.page = page;
@@ -74,14 +74,14 @@ public class PageDto<T> implements Serializable {
      * @param length  the display length
      * @param total   the total records
      * @param records the total display records
-     * @param data  the aa data
+     * @param data    the aa data
      * @return the kzt page
      */
     public static <T> PageDto<T> of(Integer page, Integer length, Integer total, Integer records, List<T> data) {
         return new PageDto<>(page, length, total, records, data);
     }
 
-    public static <T, Bo extends PageBo> PageDto<T> of(Bo pageBo, List<T> data, Long total) {
-        return new PageDto<>(pageBo == null ? 0 : pageBo.getPage(), pageBo == null ? 0 : pageBo.getLength(), Math.toIntExact(total), data == null ? 0 : data.size(), data);
+    public static <T, Bo extends PageBo> PageDto<T> of(Bo pageBo, List<T> data, Integer total) {
+        return new PageDto<>(pageBo == null ? 0 : pageBo.getPage(), pageBo == null ? 0 : pageBo.getLength(), total, data == null ? 0 : data.size(), data);
     }
 }
