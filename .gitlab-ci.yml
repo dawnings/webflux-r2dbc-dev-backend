@@ -4,5 +4,33 @@
 # Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+image: rsunix/yourkit-openjdk17
+stages:
+  # - package
+  - test
+  - build
+  # - deploy
+before_script:
+#  - echo `pwd` # debug
+#  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build:
+  stage: build
+  script:
+    - ./gradlew build
+  artifacts:
+    name: "bookeeping-backend.jar"
+    paths:
+      - build/libs/*.jar
+test:
+  stage: test
+  script:
+    - ./gradlew check
+
 include:
 - template: Security/Secret-Detection.gitlab-ci.yml

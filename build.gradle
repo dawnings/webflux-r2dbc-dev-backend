@@ -1,0 +1,78 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+}
+
+group = 'cn.dawnings'
+version = '0.0.1-SNAPSHOT'
+description = 'bookkeeping-backend'
+sourceCompatibility = '17'
+
+configurations {
+    compile.exclude group:'org.springframework.boot',module:'spring-boot-starter-tomcat'
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://maven.aliyun.com/repository/public/')
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'io.r2dbc:r2dbc-h2'
+    runtimeOnly 'dev.miku:r2dbc-mysql:0.8.2.RELEASE'
+    implementation 'io.r2dbc:r2dbc-pool'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'cn.hutool:hutool-all:5.8.8'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'io.netty:netty-all'
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.5.2.Final'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+jar {
+    exclude "config/application-dev.yml"
+    exclude "config/application-local.yml"
+    exclude "config/application-test.yml"
+    exclude "deploy"
+    exclude "update"
+    baseName="bookkeping-backend"
+    version="1.0"
+}
+//task zip(type: Zip) {
+//    //压缩包名称
+//    archiveName "${jar.baseName}-${releaseTime()}.zip"
+//    //压缩包输出到的位置
+//    destinationDir file('build/zip')
+//    //要压缩的文件夹
+//    from('build/libs') {
+//        include("*.jar")
+//    }
+//}
+//build.finalizedBy(zip)
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
