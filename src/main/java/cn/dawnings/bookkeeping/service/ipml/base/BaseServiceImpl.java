@@ -17,37 +17,39 @@ import java.lang.reflect.ParameterizedType;
 @EnableR2dbcRepositories
 public abstract class BaseServiceImpl<Do, R extends ReactiveCrudRepository<Do, ?>> implements BaseService {
     private final Snowflake snowflake = IdUtil.getSnowflake(1, 1);
+    private String tableName;
+
     protected long getNextId() {
         return snowflake.nextId();
     }
+
     @Autowired
     public void setR2dbcEntityTemplate(R2dbcEntityTemplate r2dbcEntityTemplate) {
         this.r2dbcEntityTemplate = r2dbcEntityTemplate;
     }
 
     protected ReactiveSelectOperation.SelectWithProjection<Do> getSelect() {
-        val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
-        String tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
-        return r2dbcEntityTemplate.select(getDoClass()).
-                from(tableName);
+        return r2dbcEntityTemplate.select(getDoClass()).from(getTableName());
     }
 
     protected ReactiveInsertOperation.TerminatingInsert<Do> getInsert() {
-        val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
-        String tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
-        return r2dbcEntityTemplate.insert(getDoClass()).into(tableName);
+        return r2dbcEntityTemplate.insert(getDoClass()).into(getTableName());
     }
 
     protected ReactiveUpdateOperation.UpdateWithQuery getUpdate() {
-        val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
-        String tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
-        return r2dbcEntityTemplate.update(getDoClass()).inTable(tableName);
+        return r2dbcEntityTemplate.update(getDoClass()).inTable(getTableName());
     }
 
     protected ReactiveDeleteOperation.DeleteWithQuery getDelete() {
-        val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
-        String tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
-        return r2dbcEntityTemplate.delete(getDoClass()).from(tableName);
+        return r2dbcEntityTemplate.delete(getDoClass()).from(getTableName());
+    }
+
+    private String getTableName() {
+        if (tableName == null) {
+            val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
+            return tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
+        }
+        return tableName;
     }
     //    private TransactionalOperator operator;
 
