@@ -8,7 +8,7 @@ image: docker.dawnings.cn/oraclejdk
 stages:
   # - package
   - test
-#  - build
+  #  - build
   # - deploy
 before_script:
 #  - echo `pwd` # debug
