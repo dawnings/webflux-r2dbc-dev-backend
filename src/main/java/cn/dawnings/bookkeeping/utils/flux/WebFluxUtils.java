@@ -30,14 +30,28 @@ public class WebFluxUtils {
     public static <DTO, B extends PageBo, Ser extends BaseService> Mono<PageDto<DTO>> pageByFunc(Ser service, B params
             , BiFunction<Ser, B, Mono<Integer>> countFunc, BiFunction<Ser, B, Flux<DTO>> listFunc) {
         val countRes = countFunc.apply(service, params);
-        val listRes = WebFluxUtils.fluxPageCreate(listFunc.apply(service, params));
-        return listRes.zipWith(countRes, (p, c) -> {
-            p.setTotal(c);
-            p.setRecords(p.getData().size());
-            p.setPage(params.getPage());
-            p.setLength(params.getLength());
-            return p;
-        });
+        val count = countRes.block();
+        if (count > 0 && count < (params.getLength() * (params.getPage()))) {
+            return Mono.just(PageDto.Empty(count, 0,params.getPage(),params.getLength()));
+        } else {
+            return WebFluxUtils.fluxPageCreate(listFunc.apply(service, params)).map(p -> {
+                p.setTotal(count);
+                p.setRecords(p.getData().size());
+                p.setPage(params.getPage());
+                p.setLength(params.getLength());
+                return p;
+            });
+        }
+//        count>0&&count>(params.getLength()*(params.getPage()+1))
+//        return   WebFluxUtils.fluxPageCreate(listFunc.apply(service, params)).
+//                 zipWith(countRes, (p, c) -> {
+//                    p.setTotal(c);
+//                    p.setRecords(p.getData().size());
+//                    p.setPage(params.getPage());
+//                    p.setLength(params.getLength());
+//                    return p;
+//                });
+
     }
 
     public static <DTO, B extends PageBo> Mono<PageDto<DTO>> page(Mono<Long> countRes, Flux<DTO> listFlux, B params

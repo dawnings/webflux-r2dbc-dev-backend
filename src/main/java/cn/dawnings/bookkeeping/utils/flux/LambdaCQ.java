@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Central class for creating queries. It follows a fluent API style so that you can easily chain together multiple
@@ -53,7 +54,10 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class LambdaCQ<Do> implements CriteriaDefinition {
     @SuppressWarnings("all")
-    static final LambdaCQ EMPTY = new LambdaCQ<>(SqlIdentifier.EMPTY, Comparator.INITIAL, null);
+
+    private static <Do> LambdaCQ<Do> EMPTY() {
+        return new LambdaCQ<>(SqlIdentifier.EMPTY, Comparator.INITIAL, null);
+    }
 
     private final @Nullable LambdaCQ<Do> previous;
     private final Combinator combinator;
@@ -101,9 +105,8 @@ public class LambdaCQ<Do> implements CriteriaDefinition {
      *
      * @return an empty {@link LambdaCQ}.
      */
-    @SuppressWarnings("unchecked")
     public static <Do> LambdaCQ<Do> empty() {
-        return EMPTY;
+        return EMPTY();
     }
 
     /**
@@ -125,21 +128,20 @@ public class LambdaCQ<Do> implements CriteriaDefinition {
      *
      * @return new {@link LambdaCQ}.
      */
-    @SuppressWarnings("unchecked")
     public static <Do> LambdaCQ<Do> from(List<LambdaCQ<Do>> lambdaCQ) {
 
         Assert.notNull(lambdaCQ, "LambdaCQ must not be null");
         Assert.noNullElements(lambdaCQ, "LambdaCQ must not contain null elements");
 
         if (lambdaCQ.isEmpty()) {
-            return EMPTY;
+            return EMPTY();
         }
 
         if (lambdaCQ.size() == 1) {
             return lambdaCQ.get(0);
         }
-
-        return EMPTY.and(lambdaCQ);
+        LambdaCQ<Do> empty = EMPTY();
+        return empty.and(lambdaCQ);
     }
 
     /**
@@ -607,6 +609,10 @@ public class LambdaCQ<Do> implements CriteriaDefinition {
          */
         LambdaCQ<Do> likeAll(String value);
 
+        LambdaCQ<Do> likeAll(boolean condition, String value);
+
+        LambdaCQ<Do> likeAll(Function<String, Boolean> condition, String value);
+
         LambdaCQ<Do> likeLeft(String value);
 
         LambdaCQ<Do> likeRight(String value);
@@ -825,6 +831,19 @@ public class LambdaCQ<Do> implements CriteriaDefinition {
             Assert.notNull(value, "Value must not be null!");
 
             return createLambdaCQ(Comparator.LIKE, MessageFormat.format("%{0}%", value));
+        }
+
+        @Override
+        public LambdaCQ<Do> likeAll(boolean condition, String value) {
+            if (condition) {
+                return likeAll(value);
+            }
+            return EMPTY();
+        }
+
+        @Override
+        public LambdaCQ<Do> likeAll(Function<String, Boolean> condition, String value) {
+            return likeAll(condition.apply(value), value);
         }
 
         @Override

@@ -1,6 +1,7 @@
 package cn.dawnings.bookkeeping.service;
 
 import cn.dawnings.bookkeeping.domains.base.PageDto;
+import cn.dawnings.bookkeeping.domains.bo.demo.DemoInsBo;
 import cn.dawnings.bookkeeping.domains.bo.demo.DemoPageBo;
 import cn.dawnings.bookkeeping.domains.entity.DemoDo;
 import cn.dawnings.bookkeeping.service.base.BaseService;
@@ -18,4 +19,8 @@ public interface DemoService extends BaseService {
 
 
     Mono<PageDto<DemoDo>> page3(DemoPageBo bo);
+
+    Mono<PageDto<DemoDo>> page4(DemoPageBo bo);
+
+    Mono<DemoDo> add(DemoInsBo bo);
 }

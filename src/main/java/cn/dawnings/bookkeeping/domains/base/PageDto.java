@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.val;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -83,5 +84,15 @@ public class PageDto<T> implements Serializable {
 
     public static <T, Bo extends PageBo> PageDto<T> of(Bo pageBo, List<T> data, Integer total) {
         return new PageDto<>(pageBo == null ? 0 : pageBo.getPage(), pageBo == null ? 0 : pageBo.getLength(), total, data == null ? 0 : data.size(), data);
+    }
+
+
+    public static  <T> PageDto<T> Empty(int total, int records, int page, int length) {
+        val objectPageDto = new PageDto<T>();
+        objectPageDto.setPage(page);
+        objectPageDto.setLength(length);
+        objectPageDto.setTotal(total);
+        objectPageDto.setRecords(records);
+        return objectPageDto;
     }
 }

@@ -38,10 +38,16 @@ public class DemoWeb implements BaseWeb {
     public Mono<Result<PageDto<DemoDo>>> page2(@Valid @RequestBody DemoPageBo bo) {
         return Result.ok(demoService.page2(bo));
     }
+
     @GetMapping("/page3")
-     public Mono<Result<PageDto<DemoDo>>> page3(@Valid @RequestBody DemoPageBo bo) {
-         return Result.ok(demoService.page3(bo));
-     }
+    public Mono<Result<PageDto<DemoDo>>> page3(@Valid @RequestBody DemoPageBo bo) {
+        return Result.ok(demoService.page3(bo));
+    }
+
+    @GetMapping("/page4")
+    public Mono<Result<PageDto<DemoDo>>> page4(@Valid @RequestBody DemoPageBo bo) {
+        return Result.ok(demoService.page4(bo));
+    }
 //    @GetMapping("/add")
 //    public Mono<DemoDo> add() {
 //        return demoService.findAll();
