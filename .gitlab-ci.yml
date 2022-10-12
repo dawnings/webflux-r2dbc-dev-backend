@@ -8,7 +8,7 @@ image: docker.dawnings.cn/oraclejdk
 stages:
   # - package
   - test
-  #  - build
+  # - build
   # - deploy
 before_script:
 #  - echo `pwd` # debug
@@ -19,14 +19,14 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 
-build:
-  stage: build
-  script:
-    - ./gradlew build
-  artifacts:
-    name: "bookeeping-backend.jar"
-    paths:
-      - build/libs/*.jar
+#build:
+#  stage: build
+#  script:
+#    - ./gradlew build
+#  artifacts:
+#    name: "bookeeping-backend.jar"
+#    paths:
+#      - build/libs/*.jar
 test:
   stage: test
   script:
