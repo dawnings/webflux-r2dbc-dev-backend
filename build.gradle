@@ -6,7 +6,7 @@ plugins {
 
 group = 'cn.dawnings'
 version = '0.0.1-SNAPSHOT'
-description = 'bookkeeping-backend'
+description = 'wrdb'
 sourceCompatibility = '17'
 
 configurations {

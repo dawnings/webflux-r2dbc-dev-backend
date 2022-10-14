@@ -2,7 +2,7 @@ server:
   port: 18080
 spring:
   application:
-    name: bookkeeping-backend
+    name: wrdb
   r2dbc:
     name: bookkeeping
     url: r2dbcs:mysql://121.4.124.247:55001/bookkeeping?serverTimezone=GMT%2B8
