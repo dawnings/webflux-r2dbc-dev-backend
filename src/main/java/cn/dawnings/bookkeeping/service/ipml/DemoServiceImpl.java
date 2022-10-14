@@ -1,41 +1,44 @@
 package cn.dawnings.bookkeeping.service.ipml;
 
 import cn.dawnings.bookkeeping.domains.base.PageDto;
-import cn.dawnings.bookkeeping.domains.bo.demo.DemoInsBo;
+import cn.dawnings.bookkeeping.domains.bo.demo.DemoAddBo;
+import cn.dawnings.bookkeeping.domains.bo.demo.DemoDeleteBo;
 import cn.dawnings.bookkeeping.domains.bo.demo.DemoPageBo;
+import cn.dawnings.bookkeeping.domains.bo.demo.DemoUpdateBo;
+import cn.dawnings.bookkeeping.domains.dto.demo.DemoPageDto;
 import cn.dawnings.bookkeeping.domains.entity.DemoDo;
 import cn.dawnings.bookkeeping.domains.map.demo.DemoMap;
 import cn.dawnings.bookkeeping.r_repo.DemoRepo;
 import cn.dawnings.bookkeeping.service.DemoService;
 import cn.dawnings.bookkeeping.service.ipml.base.BaseServiceImpl;
 import cn.dawnings.bookkeeping.utils.flux.LambdaCQ;
+import cn.dawnings.bookkeeping.utils.flux.LambdaUpdate;
 import cn.dawnings.bookkeeping.utils.flux.WebFluxUtils;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
+import org.springframework.data.relational.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-@EnableR2dbcRepositories
 public class DemoServiceImpl extends BaseServiceImpl<DemoDo, DemoRepo> implements DemoService {
 
     @Override
-    public Flux<DemoDo> findAll() {
-        return repo.findAll();
+    public Flux<DemoPageDto> findAll() {
+        return repo.findAll().map(DemoMap.INSTANCE::to);
     }
 
     @Override
-    public Flux<DemoDo> page(DemoPageBo bo) {
+    public Flux<DemoPageDto> page(DemoPageBo bo) {
         val pageable = Pageable.ofSize(bo.getLength()).withPage(bo.getPage());
         System.out.println(pageable);
-        return repo.findAllBy(bo, pageable);
+        return repo.findAllBy(bo, pageable).map(DemoMap.INSTANCE::to);
     }
 
     @Override
@@ -44,47 +47,72 @@ public class DemoServiceImpl extends BaseServiceImpl<DemoDo, DemoRepo> implement
     }
 
     @Override
-    public Mono<PageDto<DemoDo>> page2(DemoPageBo bo) {
+    public Mono<PageDto<DemoPageDto>> page2(DemoPageBo bo) {
         val name = Criteria.where("name").like("%" + bo.getNameLikeAll() + "%");
         val count = r2dbcEntityTemplate.select(getDoClass()).
                 from("t_demo")
                 .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).count();
         val all = r2dbcEntityTemplate.select(getDoClass()).
                 from("t_demo")
-                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all();
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all().map(DemoMap.INSTANCE::to);
 
         return WebFluxUtils.page(count, all, bo);
     }
 
     @Override
-    public Mono<PageDto<DemoDo>> page3(DemoPageBo bo) {
+    public Mono<PageDto<DemoPageDto>> page3(DemoPageBo bo) {
         val name = LambdaCQ.where(DemoDo::getName).likeAll(StrUtil.isNotBlank(bo.getNameLikeAll()),
                 bo.getNameLikeAll());
         val count = getSelect()
                 .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).count();
         val all = getSelect()
-                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all();
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all().map(DemoMap.INSTANCE::to);
 
         return WebFluxUtils.page(count, all, bo);
     }
 
     @Override
-    public Mono<PageDto<DemoDo>> page4(DemoPageBo bo) {
+    public Mono<PageDto<DemoPageDto>> page4(DemoPageBo bo) {
         val name = LambdaCQ.where(DemoDo::getName).likeAll(StrUtil::isNotBlank,
-                bo.getNameLikeAll()).and(LambdaCQ.where(DemoDo::getName).likeAll(StrUtil::isNotBlank,
-                "2"));
+                bo.getNameLikeAll()
+//        ).and(LambdaCQ.where(DemoDo::getName).likeAll(StrUtil::isNotBlank,"2")
+        );
         val count = getSelect()
                 .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).count();
         val all = getSelect()
-                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all();
+                .matching(Query.query(name).limit(bo.getLength()).offset(bo.getLengthLong() * (bo.getPage()))).all().map(DemoMap.INSTANCE::to);
 
         return WebFluxUtils.page(count, all, bo);
     }
 
     @Override
-    public Mono<DemoDo> add(DemoInsBo bo) {
+    public Mono<DemoPageDto> add(DemoAddBo bo) {
         val addto = DemoMap.INSTANCE.to(bo);
         addto.setId(getNextId());
-        return getInsert().using(addto);
+        return getInsert().using(addto).map(DemoMap.INSTANCE::to);
+    }
+
+    @Override
+    public Mono<Integer> delete(DemoDeleteBo bo) {
+        val name = LambdaCQ.where(DemoDo::getId).is(bo.getId());
+        return getDelete().matching(Query.query(name)).all();
+    }
+
+    @Override
+    public Mono<Integer> update(DemoUpdateBo bo) {
+        val name = LambdaCQ.where(DemoDo::getId).is(bo.getId());
+        return getUpdate().matching(Query.query(name)).apply(Update.update("name", bo.getName()));
+    }
+
+    @Override
+    public Mono<Integer> update2(DemoUpdateBo bo) {
+        val name = LambdaCQ.where(DemoDo::getId).is(bo.getId());
+        return getUpdate().matching(Query.query(name)).apply(LambdaUpdate.update(DemoDo::getName, bo.getName()).getUpdate());
+    }
+
+    @Override
+    public Mono<Integer> update3(DemoUpdateBo bo) {
+        val name = LambdaCQ.where(DemoDo::getId).is(bo.getId());
+        return getUpdate().matching(Query.query(name)).apply(LambdaUpdate.update(DemoDo::getName, bo.getName()).getUpdate());
     }
 }

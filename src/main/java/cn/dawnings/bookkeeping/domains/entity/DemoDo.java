@@ -1,10 +1,10 @@
 package cn.dawnings.bookkeeping.domains.entity;
 
+import cn.dawnings.bookkeeping.domains.base.BaseDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
@@ -12,9 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("t_demo")
-public class DemoDo {
-    @Id
-    private Long id;
+public class DemoDo extends BaseDo {
     private String name;
 
 }

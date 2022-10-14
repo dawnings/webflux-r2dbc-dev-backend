@@ -30,9 +30,13 @@ public class WebFluxUtils {
     public static <DTO, B extends PageBo, Ser extends BaseService> Mono<PageDto<DTO>> pageByFunc(Ser service, B params
             , BiFunction<Ser, B, Mono<Integer>> countFunc, BiFunction<Ser, B, Flux<DTO>> listFunc) {
         val countRes = countFunc.apply(service, params);
+        /*
+         * TODO 需要验证下,在大数据量时,到底是哪种执行方式更快
+         *  原则上不推荐使用 block,只是传统的方式优化使用 block 也会合理
+         */
         val count = countRes.block();
-        if (count > 0 && count < (params.getLength() * (params.getPage()))) {
-            return Mono.just(PageDto.Empty(count, 0,params.getPage(),params.getLength()));
+        if (count == null || (count > 0 && count < (params.getLength() * (params.getPage())))) {
+            return Mono.just(PageDto.Empty(count == null ? 0 : count, 0, params.getPage(), params.getLength()));
         } else {
             return WebFluxUtils.fluxPageCreate(listFunc.apply(service, params)).map(p -> {
                 p.setTotal(count);

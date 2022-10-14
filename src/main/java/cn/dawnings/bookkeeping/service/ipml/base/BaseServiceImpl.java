@@ -47,7 +47,7 @@ public abstract class BaseServiceImpl<Do, R extends ReactiveCrudRepository<Do, ?
     private String getTableName() {
         if (tableName == null) {
             val table = AnnotationUtil.getAnnotation(getDoClass(), Table.class);
-            return tableName = StrUtil.isBlankIfStr(table.name()) ? table.value() : table.name();
+            return tableName = StrUtil.isBlankIfStr(table.value()) ? table.name() : table.value();
         }
         return tableName;
     }
