@@ -8,10 +8,10 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 @SpringBootApplication
 @EnableWebFlux
 @EnableR2dbcAuditing
-public class WRDPBackendApplication {
+public class WrdbBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WRDPBackendApplication.class, args);
+        SpringApplication.run(WrdbBackendApplication.class, args);
     }
 
 }

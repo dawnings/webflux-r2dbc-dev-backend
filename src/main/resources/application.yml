@@ -1,5 +1,22 @@
 server:
   port: 18080
-#spring:
-#  profiles:
-#    active: local
+spring:
+  profiles:
+    active: local
+  devtools:
+    add-properties: true
+  application:
+    name: wrdb
+  r2dbc:
+    name: ~
+    url: r2dbcs:mysql://[ip]:[port]/[dbName]?serverTimezone=GMT%2B8
+    username: [username]
+    password: [pwd]
+    pool:
+      enabled: true
+      validation-query: select 1
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
