@@ -4,10 +4,10 @@ spring:
   application:
     name: wrdb
   r2dbc:
-    name: wrdb
-    url: r2dbcs:mysql://localhost:3306/wrdb?serverTimezone=GMT%2B8
-    username: wrdb
-    password: wrdb
+    name: bookkeeping
+    url: r2dbcs:mysql://121.4.124.247:55001/bookkeeping?serverTimezone=GMT%2B8
+    username: bookkeeping
+    password: wE5GR4KmkrcKnLMF
     pool:
       enabled: true
       validation-query: select 1
