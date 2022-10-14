@@ -1,6 +1,8 @@
 server:
   port: 18080
 spring:
+  devtools:
+    add-properties: true
   application:
     name: wrdb
   r2dbc:
@@ -11,3 +13,8 @@ spring:
     pool:
       enabled: true
       validation-query: select 1
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
