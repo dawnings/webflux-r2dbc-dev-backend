@@ -1,9 +1,8 @@
 package cn.dawnings.wrdb;
 
 import cn.dawnings.wrdb.domains.base.PageDto;
-import cn.dawnings.wrdb.domains.bo.demo.TestPageBo;
+import cn.dawnings.wrdb.domains.bo.test.TestPageBo;
 import cn.dawnings.wrdb.domains.dto.demo.TestPageDto;
-import cn.dawnings.wrdb.service.DemoService;
 import cn.dawnings.wrdb.service.TestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

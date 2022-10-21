@@ -1,4 +1,4 @@
-package cn.dawnings.wrdb.domains.bo.demo;
+package cn.dawnings.wrdb.domains.bo.test;
 
 import cn.dawnings.wrdb.domains.base.BaseBo;
 import lombok.Data;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TestDeleteBo extends BaseBo {
+public class TestUpdateBo extends BaseBo {
     private Long id;
+    private String name;
 }

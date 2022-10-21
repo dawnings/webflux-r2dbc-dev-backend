@@ -1,9 +1,7 @@
 package cn.dawnings.wrdb.service;
 
 import cn.dawnings.wrdb.domains.base.PageDto;
-import cn.dawnings.wrdb.domains.bo.demo.*;
-import cn.dawnings.wrdb.domains.dto.demo.DemoPageDto;
-import cn.dawnings.wrdb.domains.dto.demo.TestPageDto;
+import cn.dawnings.wrdb.domains.bo.test.TestPageBo;
 import cn.dawnings.wrdb.domains.dto.demo.TestPageDto;
 import cn.dawnings.wrdb.service.base.BaseService;
 import reactor.core.publisher.Flux;

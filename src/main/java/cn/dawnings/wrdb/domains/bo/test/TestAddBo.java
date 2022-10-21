@@ -1,4 +1,4 @@
-package cn.dawnings.wrdb.domains.bo.demo;
+package cn.dawnings.wrdb.domains.bo.test;
 
 import cn.dawnings.wrdb.domains.base.BaseBo;
 import lombok.Data;

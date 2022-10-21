@@ -1,13 +1,11 @@
 package cn.dawnings.wrdb.service.ipml;
 
 import cn.dawnings.wrdb.domains.base.PageDto;
-import cn.dawnings.wrdb.domains.bo.demo.*;
-import cn.dawnings.wrdb.domains.dto.demo.DemoPageDto;
+import cn.dawnings.wrdb.domains.bo.test.TestPageBo;
 import cn.dawnings.wrdb.domains.dto.demo.TestPageDto;
 import cn.dawnings.wrdb.domains.entity.DemoDo;
 import cn.dawnings.wrdb.domains.entity.TestDo;
-import cn.dawnings.wrdb.domains.map.demo.DemoMap;
-import cn.dawnings.wrdb.domains.map.demo.TestMap;
+import cn.dawnings.wrdb.domains.map.test.TestMap;
 import cn.dawnings.wrdb.r_repo.TestRepo;
 import cn.dawnings.wrdb.service.TestService;
 import cn.dawnings.wrdb.service.ipml.base.BaseServiceImpl;
